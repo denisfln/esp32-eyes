@@ -24,9 +24,11 @@ This fork targets the **ESP32-C3 Super Mini** board, using:
 <img src="https://github.com/playfultechnology/esp32-eyes/blob/main/doc/Schematic_ESP32-OLED-Eyes.png" />
 
 ### ESP32-C3 Super Mini pinout
-The Super Mini only exposes GPIO0-10 and GPIO20/21, and GPIO0-5 are its only
-ADC1-capable (reliable analog input) pins, so wiring differs from the original
-ESP32 schematic above:
+The Super Mini only exposes GPIO0-10 and GPIO20/21, and only GPIO0-4 are wired
+to the chip's ADC1 unit, so wiring differs from the original ESP32 schematic
+above. GPIO5 is the C3's only ADC2 channel; Arduino-ESP32 disables
+`analogRead()` on it on this chip (ADC2 shares circuitry with Wi-Fi and is
+unreliable), so it is **not** used for any analog input:
 
 | Signal                        | GPIO |
 |--------------------------------|------|
@@ -35,12 +37,15 @@ ESP32 schematic above:
 | Joystick Y axis                | 0    |
 | Joystick X axis                | 1    |
 | Joystick button (blink)        | 10   |
-| Mood potentiometer - Angry      | 3    |
-| Mood potentiometer - Sad        | 4    |
-| Mood potentiometer - Surprised  | 5    |
+| Mood potentiometer - Angry      | 2    |
+| Mood potentiometer - Sad        | 3    |
+| Mood potentiometer - Surprised  | 4    |
 
-GPIO2, GPIO8 and GPIO9 are boot strapping pins, so they are deliberately kept
-free of permanently-wired voltage dividers (potentiometers/joystick axes).
+GPIO8 and GPIO9 are boot strapping pins used here for I2C (SDA/SCL default
+to a pull-up, matching their required state at reset). GPIO2 is also a
+strapping pin, but its strap value is only latched when GPIO9 is pulled low
+(download boot mode); since GPIO9 stays high here, GPIO2 is safe to use as a
+regular analog input.
 
 ## Building with PlatformIO
 This project is a standard [PlatformIO](https://platformio.org/) project targeting

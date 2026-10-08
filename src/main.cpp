@@ -12,13 +12,18 @@
 
 // CONSTANTS
 // Pin assignments below target the ESP32-C3 Super Mini. Its usable GPIOs are
-// 0-10 and 20-21; GPIO8/9 default to I2C (SDA/SCL, see Face.cpp) and GPIO2,
-// 8 and 9 are boot strapping pins, so they are avoided for the pot/joystick
-// voltage dividers below. GPIO0-5 are the only ADC1-capable pins, which is
-// exactly how many analog inputs this sketch needs.
+// 0-10 and 20-21; GPIO8/9 default to I2C (SDA/SCL, see Face.cpp). Only
+// GPIO0-4 are wired to the chip's ADC1 unit: GPIO5 is the C3's only ADC2
+// channel, and Arduino-ESP32 refuses analogRead() on it (ADC2 shares
+// circuitry with Wi-Fi and is disabled by default on this chip), so all 5
+// analog inputs below are kept within GPIO0-4. GPIO2 is a strapping pin,
+// but its state is only latched at boot when GPIO9 is pulled low (download
+// mode); since GPIO9 is used here as the I2C SCL line with its default
+// pull-up, it stays high on reset, so GPIO2's strap value is ignored and
+// it's safe to use as a regular analog input.
 const byte joystickPins[] = {0, 1}; // {Y axis, X axis}
 const byte blinkPin = 10;
-const byte moodPins[] = {3, 4, 5};
+const byte moodPins[] = {2, 3, 4};
 const eEmotions moods[] = {eEmotions::Angry, eEmotions::Sad, eEmotions::Surprised}; 
 
 // GLOBALS
