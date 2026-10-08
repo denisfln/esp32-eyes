@@ -16,11 +16,41 @@ Heavily based on <a href="https://github.com/luisllamasbinaburo/ESP32_Faces/">th
  - Automatic or manual blink and look direction
 
 ## Hardware Used
- - ESP32 with built-in OLED - https://www.aliexpress.com/item/4000065217965.html (though you can use pretty much any Arduino/ESP8266/ESP8266 and attach a generic I2C OLED)
+This fork targets the **ESP32-C3 Super Mini** board, using:
+ - ESP32-C3 Super Mini - a generic SSD1306 128x64 I2C OLED is wired up externally (the board has no built-in display)
  - 3x linear potentiometers - https://www.aliexpress.com/item/1005005859787527.html
  - Joystick module - https://www.aliexpress.com/item/32901984938.html
 
 <img src="https://github.com/playfultechnology/esp32-eyes/blob/main/doc/Schematic_ESP32-OLED-Eyes.png" />
+
+### ESP32-C3 Super Mini pinout
+The Super Mini only exposes GPIO0-10 and GPIO20/21, and GPIO0-5 are its only
+ADC1-capable (reliable analog input) pins, so wiring differs from the original
+ESP32 schematic above:
+
+| Signal                        | GPIO |
+|--------------------------------|------|
+| OLED SDA                      | 8    |
+| OLED SCL                      | 9    |
+| Joystick Y axis                | 0    |
+| Joystick X axis                | 1    |
+| Joystick button (blink)        | 10   |
+| Mood potentiometer - Angry      | 3    |
+| Mood potentiometer - Sad        | 4    |
+| Mood potentiometer - Surprised  | 5    |
+
+GPIO2, GPIO8 and GPIO9 are boot strapping pins, so they are deliberately kept
+free of permanently-wired voltage dividers (potentiometers/joystick axes).
+
+## Building with PlatformIO
+This project is a standard [PlatformIO](https://platformio.org/) project targeting
+`env:esp32-c3-supermini` (see `platformio.ini`). Since the Super Mini has no
+USB-to-serial bridge chip, `platformio.ini` enables the native USB CDC stack
+so `Serial` output works over the USB port. Build and upload with:
+```
+pio run -t upload
+pio device monitor
+```
 
 ## Software Component Structure
 
