@@ -21,10 +21,10 @@
 // mode); since GPIO9 is used here as the I2C SCL line with its default
 // pull-up, it stays high on reset, so GPIO2's strap value is ignored and
 // it's safe to use as a regular analog input.
-const byte joystickPins[] = {0, 1}; // {Y axis, X axis}
-const byte blinkPin = 10;
-const byte moodPins[] = {2, 3, 4};
-const eEmotions moods[] = {eEmotions::Angry, eEmotions::Sad, eEmotions::Surprised}; 
+//const byte joystickPins[] = {0, 1}; // {Y axis, X axis}
+//const byte blinkPin = 10;
+//const byte moodPins[] = {2, 3, 4};
+//const eEmotions moods[] = {eEmotions::Angry, eEmotions::Sad, eEmotions::Surprised}; 
 
 // GLOBALS
 Face *face;
@@ -35,7 +35,7 @@ void setup(void) {
   Serial.println(__FILE__ __DATE__);
 
   // Configure input pins
-  pinMode(blinkPin, INPUT_PULLUP);
+  //pinMode(blinkPin, INPUT_PULLUP);
 
   // Create a new face
   face = new Face(/* screenWidth = */ 128, /* screenHeight = */ 64, /* eyeSize = */ 40);
@@ -43,16 +43,35 @@ void setup(void) {
   face->Expression.GoTo_Normal();
 
   // Assign a weight to each emotion
-  //face->Behavior.SetEmotion(eEmotions::Normal, 1.0);
-  //face->Behavior.SetEmotion(eEmotions::Angry, 1.0);
-  //face->Behavior.SetEmotion(eEmotions::Sad, 1.0);
+  face->Behavior.SetEmotion(eEmotions::Normal, 1.0);
+  face->Behavior.SetEmotion(eEmotions::Angry, 1.0);
+  face->Behavior.SetEmotion(eEmotions::Sad, 1.0);
+  face->Behavior.SetEmotion(eEmotions::Surprised, 1.0);
+  face->Behavior.SetEmotion(eEmotions::Glee, 1.0);
+  face->Behavior.SetEmotion(eEmotions::Happy, 1.0);
+  face->Behavior.SetEmotion(eEmotions::Worried, 1.0);
+  face->Behavior.SetEmotion(eEmotions::Focused, 1.0);
+  face->Behavior.SetEmotion(eEmotions::Annoyed, 1.0);
+  face->Behavior.SetEmotion(eEmotions::Skeptic, 1.0);
+  face->Behavior.SetEmotion(eEmotions::Frustrated, 1.0);
+  face->Behavior.SetEmotion(eEmotions::Unimpressed, 1.0);
+  face->Behavior.SetEmotion(eEmotions::Sleepy, 1.0);
+  face->Behavior.SetEmotion(eEmotions::Suspicious, 1.0);
+  face->Behavior.SetEmotion(eEmotions::Squint, 1.0);
+  face->Behavior.SetEmotion(eEmotions::Furious, 1.0);
+  face->Behavior.SetEmotion(eEmotions::Scared, 1.0);
+  face->Behavior.SetEmotion(eEmotions::Awe, 1.0);
+  
+  
   // Automatically switch between behaviours (selecting new behaviour randomly based on the weight assigned to each emotion)
   face->RandomBehavior = true;
+  // Change expression every 5 seconds
+  face->Behavior.Timer.SetIntervalMillis(3000);
 
   // Automatically blink
   face->RandomBlink = true;
   // Set blink rate
-  face->Blink.Timer.SetIntervalMillis(4000);
+  //face->Blink.Timer.SetIntervalMillis(4000);
 
   // Automatically choose a new random direction to look
   face->RandomLook = false;
@@ -75,7 +94,7 @@ void loop(){
 
   // To avoid making eyes too twitchy (and to allow time for previous move animation to end),
   // only recalculate new position every 500ms
-  if(millis() - lastMoveTime > 500) {
+  /*if(millis() - lastMoveTime > 500) {
     int yRaw = analogRead(joystickPins[0]);
     int xRaw = analogRead(joystickPins[1]);
     float y = mapFloat(yRaw, 0, 4095, 1.0, -1.0);
@@ -86,14 +105,14 @@ void loop(){
   // Blink when joystick pressed in
   if(!digitalRead(blinkPin)){
     face->DoBlink();
-  }
+  }*/
 
   // Use this code to set a particular emotion from a button
-  for(int i=0; i<3; i++){
+  /*for(int i=0; i<3; i++){
     int32_t potValue = analogRead(moodPins[i]);
     float moodLevel = map(potValue, 0, 4095, 0.0, 2.0);
     face->Behavior.SetEmotion(moods[i], moodLevel);
-  }
+  }*/
 
   // Update the face!
   face->Update();
