@@ -33,7 +33,6 @@ public:
     uint16_t CenterX;
     uint16_t CenterY;
     uint16_t EyeSize;
-    uint16_t EyeInterDistance = 4;
 
     Eye LeftEye;
     Eye RightEye;

@@ -29,12 +29,15 @@ class Face;
 class Eye {
   protected:
     Face& _face;
+    // The physical display this eye is drawn to (left and right eyes each
+    // have their own display, sharing one I2C bus at different addresses).
+    U8G2_SSD1306_128X64_NONAME_F_HW_I2C& _display;
 
     void Update();
     void ChainOperators();
 
   public:
-    Eye(Face& face);
+    Eye(Face& face, U8G2_SSD1306_128X64_NONAME_F_HW_I2C& display);
 
     uint16_t CenterX;
     uint16_t CenterY;

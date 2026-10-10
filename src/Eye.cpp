@@ -12,7 +12,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
 #include "Eye.h"
 
-Eye::Eye(Face& face) : _face(face) {
+Eye::Eye(Face& face, U8G2_SSD1306_128X64_NONAME_F_HW_I2C& display) : _face(face), _display(display) {
 
   this->IsMirrored = false;
 
@@ -51,7 +51,7 @@ void Eye::Update() {
 
 void Eye::Draw() {
 	Update();
-	EyeDrawer::Draw(CenterX, CenterY, FinalConfig);
+	EyeDrawer::Draw(_display, CenterX, CenterY, FinalConfig);
 }
 
 void Eye::ApplyPreset(const EyeConfig config) {

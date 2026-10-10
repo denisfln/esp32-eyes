@@ -17,7 +17,7 @@ Heavily based on <a href="https://github.com/luisllamasbinaburo/ESP32_Faces/">th
 
 ## Hardware Used
 This fork targets the **ESP32-C3 Super Mini** board, using:
- - ESP32-C3 Super Mini - a generic SSD1306 128x64 I2C OLED is wired up externally (the board has no built-in display)
+ - ESP32-C3 Super Mini - two generic SSD1306 128x64 I2C OLEDs are wired up externally (the board has no built-in display), one per eye
  - 3x linear potentiometers - https://www.aliexpress.com/item/1005005859787527.html
  - Joystick module - https://www.aliexpress.com/item/32901984938.html
 
@@ -40,6 +40,12 @@ unreliable), so it is **not** used for any analog input:
 | Mood potentiometer - Angry      | 2    |
 | Mood potentiometer - Sad        | 3    |
 | Mood potentiometer - Surprised  | 4    |
+
+The ESP32-C3 only has a single hardware I2C peripheral, so both OLED
+displays share the same SDA/SCL pins above and are wired in parallel (same
+VCC/GND too). They are distinguished by I2C address instead: the left eye's
+display must be configured (via its address-select jumper/resistor, if
+present) to `0x3C`, and the right eye's display to `0x3D`.
 
 GPIO8 and GPIO9 are boot strapping pins used here for I2C (SDA/SCL default
 to a pull-up, matching their required state at reset). GPIO2 is also a
